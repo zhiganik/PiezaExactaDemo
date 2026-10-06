@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#DCE1E9;color:#374153;font-family:'Wix Madefor Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#253CAC}a:hover{color:#1E3190}
+</style>
+</helmet>
+
+<div style="padding:64px;display:flex;flex-direction:column;gap:72px;width:max-content">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:900px">
+    <span style="font-size:14px;font-weight:600;color:#6B7385">piezaexacta.es · /asistente · prototipo v1</span>
+    <h1 style="margin:0;font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:56px;letter-spacing:-.02em;line-height:1.05">Asistente IA de piezas</h1>
+    <p style="margin:0;font-size:18px;line-height:1.55;text-wrap:pretty">Todas las pantallas son interactivas: cada marco arranca en su estado y se puede seguir clicando. La demo completa está en <a href="#demo">01</a>. Datos simulados; estructura de sesión según el backend.</p>
+  </div>
+
+  <!-- 00 DESIGN SYSTEM -->
+  <section id="ds" data-screen-label="00 Design system" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;gap:14px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;background:#374153;color:#fff;border-radius:6px;padding:4px 9px">00</span><span style="font-family:'Wix Madefor Display',sans-serif;font-size:30px;font-weight:600">Mini design system</span></div>
+    <div style="display:grid;grid-template-columns:repeat(4,340px);gap:24px">
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;grid-column:span 2">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">Color</span>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+          <sc-for list="{{ swatches }}" as="c" hint-placeholder-count="10">
+            <div style="display:flex;flex-direction:column;gap:6px"><span style="height:56px;border-radius:8px;background:{{ c.hex }};border:1px solid #E4E8EF"></span><span style="font-size:12px;font-weight:600">{{ c.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6B7385">{{ c.hex }}</span><span style="font-size:11px;color:#6B7385;line-height:1.35">{{ c.use }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;grid-column:span 2">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">Tipografía · Wix Madefor Display / Text · JetBrains Mono</span>
+        <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:40px;letter-spacing:-.015em;line-height:1.1">Encuentra la pieza exacta</span>
+        <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px">Pastillas de freno delanteras · 20/600</span>
+        <span style="font-size:15px;line-height:1.5">Texto de chat 15/22. Frases cortas, sin tecnicismos y con una explicación cuando hay que comprobar algo.</span>
+        <span style="font-size:13px;color:#6B7385">Secundario 13 · notas, metadatos</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:15px">5Q0 698 151 B · WVWZZZAUZFW805412</span>
+      </div>
+
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">Botones · radio 8</span>
+        <button style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:12px 18px;border-radius:8px">Primario · Sí, es mi coche</button>
+        <button style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:15px;padding:11px 18px;border-radius:8px">Secundario · Cambiar coche</button>
+        <button style="border:1px solid #C9D0DB;background:#F2F5F9;color:#374153;font-weight:600;font-size:14px;padding:11px 14px;border-radius:8px">Externo · Abrir carrito en avtopro.es ↗</button>
+        <button style="border:0;background:transparent;color:#253CAC;font-weight:600;font-size:14px;padding:6px 0;text-align:left">Texto · Copiar códigos</button>
+        <span style="font-size:12px;color:#6B7385;line-height:1.4">El CTA a avtopro.es nunca usa el estilo primario (Google Ad Grants).</span>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">QuickReplyChips</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="border:1px solid #C9D0DB;background:#fff;font-size:14px;font-weight:500;padding:9px 14px;border-radius:999px">Delanteras</span>
+          <span style="border:1px solid #C9D0DB;background:#fff;font-size:14px;font-weight:500;padding:9px 14px;border-radius:999px">Traseras</span>
+          <span style="border:1px dashed #9AA3B2;background:#fff;color:#6B7385;font-size:14px;font-weight:500;padding:9px 14px;border-radius:999px">No lo sé</span>
+        </div>
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em;margin-top:6px">Filtros (como en el sitio)</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span style="background:#374153;color:#fff;font-size:14px;padding:9px 14px;border-radius:999px">Todos</span>
+          <span style="background:#E4E8EF;font-size:14px;padding:9px 14px;border-radius:999px">pastillas Golf 7</span>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">StatusBadge</span>
+        <sc-for list="{{ statusList }}" as="st" hint-placeholder-count="7">
+          <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ st.bg }};color:{{ st.fg }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ st.fg }}"></span>{{ st.label }}</span>
+        </sc-for>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">MessageBubble</span>
+        <div style="align-self:flex-end;background:#253CAC;color:#fff;padding:9px 13px;border-radius:16px 16px 4px 16px;font-size:14px">user</div>
+        <div style="display:flex;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:#E8ECF8;color:#253CAC;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">IA</span><div style="background:#fff;border:1px solid #E4E8EF;padding:9px 13px;border-radius:4px 16px 16px 16px;font-size:14px">ai</div></div>
+        <div style="display:flex;gap:8px"><span style="width:26px;height:26px;border-radius:50%;background:#9A5B13;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">MR</span><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:11px;display:flex;gap:6px;align-items:center"><strong>Marta R.</strong><span style="background:#9A5B13;color:#fff;border-radius:4px;padding:1px 5px;font-weight:600">Experto</span></span><div style="background:#F8EEDF;border:1px solid #EBD7BC;padding:9px 13px;border-radius:4px 16px 16px 16px;font-size:14px">expert</div></div></div>
+        <div style="align-self:center;font-size:12px;color:#6B7385;background:#EDF0F5;padding:5px 12px;border-radius:999px">system</div>
+      </div>
+
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;grid-column:span 2">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">Superficies · radio 12, sin sombras salvo flotantes</span>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;background:#F2F5F9;border-radius:10px;padding:14px">
+          <div style="background:#fff;border-radius:12px;padding:14px;font-size:13px">Tarjeta blanca<br><span style="color:#6B7385">contenido principal</span></div>
+          <div style="background:#E4E8EF;border-radius:12px;padding:14px;font-size:13px">Bloque gris<br><span style="color:#6B7385">info, beta</span></div>
+          <div style="background:#E8ECF8;border-radius:12px;padding:14px;font-size:13px;color:#253CAC">Bloque acento<br><span style="color:#374153">«Por qué es compatible»</span></div>
+        </div>
+      </div>
+      <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;grid-column:span 2">
+        <span style="font-size:12px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em">Componentes React</span>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <sc-for list="{{ componentNames }}" as="cn" hint-placeholder-count="20">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#F2F5F9;border-radius:6px;padding:4px 8px">&lt;{{ cn }}&gt;</span>
+          </sc-for>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#374153;color:#E4E8EF;border-radius:10px;padding:12px 14px;line-height:1.6;white-space:pre-wrap">session = { vin, plate, vehicle, synonyms, treeId, crossGroupIds, parts, carts, status }</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 DEMO -->
+  <section id="demo" data-screen-label="01 Demo" style="display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:14px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;background:#253CAC;color:#fff;border-radius:6px;padding:4px 9px">01</span><span style="font-family:'Wix Madefor Display',sans-serif;font-size:30px;font-weight:600">Demo guiada · de principio a fin</span></div>
+      <span style="font-size:15px;color:#6B7385">Buscar pieza → Usar VIN de ejemplo → Sí, es mi coche → Delanteras → No lo sé → resultado → 👎 → Hablar con un experto → registro → respuesta del experto</span>
+    </div>
+    <div style="display:flex;gap:40px;align-items:flex-start">
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600;color:#6B7385">Móvil · 390</span><dc-import name="Asistente" preset="demo" device="mobile" hint-size="390px,800px" style="width:390px;height:800px;display:block;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(55,65,83,.22)"></dc-import></div>
+      <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600;color:#6B7385">Escritorio · 1280</span><dc-import name="Asistente" preset="demo" device="desktop" hint-size="1280px,800px" style="width:1280px;height:800px;display:block;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(55,65,83,.22)"></dc-import></div>
+    </div>
+  </section>
+
+  <!-- SCREENS -->
+  <sc-for list="{{ groups }}" as="grp" hint-placeholder-count="6">
+    <section id="{{ grp.id }}" data-screen-label="{{ grp.label }}" style="display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;gap:14px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;background:#374153;color:#fff;border-radius:6px;padding:4px 9px">{{ grp.num }}</span><span style="font-family:'Wix Madefor Display',sans-serif;font-size:30px;font-weight:600">{{ grp.title }}</span></div>
+      <div style="display:flex;gap:40px;align-items:flex-start">
+        <sc-for list="{{ grp.items }}" as="sc">
+          <div style="display:flex;flex-direction:column;gap:10px;width:{{ sc.w }}">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ sc.title }}</span><span style="font-size:13px;color:#6B7385;line-height:1.4;min-height:36px">{{ sc.note }}</span></div>
+            <dc-import name="Asistente" preset="{{ sc.preset }}" device="{{ sc.device }}" cart-layout="{{ sc.layout }}" hint-size="390px,800px" style="width:{{ sc.w }};height:800px;display:block;border-radius:{{ sc.r }};overflow:hidden;box-shadow:0 16px 40px rgba(55,65,83,.18)"></dc-import>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const M = (preset, title, note, layout) => ({ preset, title, note, device:'mobile', w:'390px', r:'28px', layout: layout || 'tabs' });
+const D = (preset, title, note, layout) => ({ preset, title, note, device:'desktop', w:'1280px', r:'12px', layout: layout || 'tabs' });
+const G0 = [
+  { id:'s02', num:'02', title:'Página /asistente y widget en el sitio', items:[
+    M('start','Inicio del asistente','Campo libre, ejemplos, «Tu coche» y aviso beta'),
+    D('start','Inicio · escritorio','Dos columnas: consulta + coche'),
+    M('blog','FloatingLauncher en un artículo','Botón flotante sobre el contenido del blog'),
+    D('blog','FloatingLauncher · escritorio','Abre el chat con un saludo') ]},
+  { id:'s03', num:'03', title:'Identificación del coche', items:[
+    M('vin','Sin VIN en el mensaje','La IA pide el VIN y explica dónde encontrarlo'),
+    M('vin_error','VIN incorrecto','Mensaje de aviso con la causa concreta'),
+    M('vehicle','VehicleCard','Confirmar o cambiar coche'),
+    M('not_found','Matrícula no encontrada','Sin VIN → matrícula → no encontrado → experto') ]},
+  { id:'s04', num:'04–05', title:'Tipo de pieza y preguntas', items:[
+    M('part_type','Varios tipos de pieza','Hasta 5 chips + «Otra cosa»'),
+    M('clarify','Pregunta de aclaración','Chips con «No lo sé» y cómo comprobarlo'),
+    M('off_topic','Pregunta fuera de tema','Rechazo amable y vuelta al tema') ]},
+  { id:'s06', num:'06', title:'Resultado con carritos', items:[
+    M('result','Pestañas','Info primero; carritos como pestañas'),
+    M('result_carousel','Carrusel','Mismas tarjetas en desplazamiento horizontal','carousel'),
+    D('result','Escritorio','Garaje y acceso al experto en la columna lateral') ]},
+  { id:'s07', num:'07–08', title:'Sin stock y confianza baja', items:[
+    M('no_stock','Sin disponibilidad','Solo información técnica + experto'),
+    M('low_conf','Requiere verificación','Recomendar experto o ver resultado igualmente') ]},
+  { id:'s09', num:'09–10', title:'Experto humano y feedback', items:[
+    M('feedback','👎 → ¿Qué falla?','Motivo rápido; abre la vía al experto'),
+    M('auth','AuthModal + RGPD','Google o email; consentimiento obligatorio'),
+    M('handoff','Elegir canal','Chat / WhatsApp / email, sin prometer plazos'),
+    M('expert','Respuesta del experto','Avatar, nombre y distintivo «Experto»'),
+    D('expert','Experto · escritorio','Estado «Con un experto» en la cabecera') ]},
+  { id:'s11', num:'11', title:'Mis solicitudes', items:[
+    M('history','Lista de solicitudes','Coche, pieza, fecha y estado'),
+    M('history_reopen','Reabrir solicitud antigua','Aviso de que los precios se vuelven a comprobar'),
+    D('history','Escritorio','') ]},
+  { id:'s12', num:'12', title:'Errores y límites', items:[
+    M('down','Servicio no disponible','Con «Reintentar»'),
+    M('limit','Límite de consultas','Cuenta gratuita o volver mañana') ]}
+];
+const GROUPS = G0.map(g => ({ ...g, label: g.num + ' ' + g.title }));
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      groups: GROUPS,
+      swatches: [
+        {name:'Primario',hex:'#253CAC',use:'Acciones, enlaces'},
+        {name:'Tinta',hex:'#374153',use:'Texto, logo'},
+        {name:'Fondo',hex:'#F2F5F9',use:'Página'},
+        {name:'Gris bloque',hex:'#E4E8EF',use:'Chips, bloques info'},
+        {name:'Superficie',hex:'#FFFFFF',use:'Tarjetas, chat'},
+        {name:'Acento suave',hex:'#E8ECF8',use:'Selección, IA'},
+        {name:'Secundario',hex:'#6B7385',use:'Metadatos'},
+        {name:'Experto',hex:'#9A5B13',use:'Solo persona real'},
+        {name:'Correcto',hex:'#2F7A55',use:'Compatible, listo'},
+        {name:'Aviso',hex:'#8F5E00',use:'Verificar, límites'}
+      ],
+      statusList: [
+        {label:'En curso',fg:'#253CAC',bg:'#E8ECF8'},
+        {label:'Esperando tu respuesta',fg:'#8F5E00',bg:'#FBF1DA'},
+        {label:'Con un experto',fg:'#9A5B13',bg:'#F8EEDF'},
+        {label:'Resultado listo',fg:'#2F7A55',bg:'#E3F2EA'},
+        {label:'Cerrado',fg:'#6B7385',bg:'#E4E8EF'},
+        {label:'Compatible',fg:'#2F7A55',bg:'#E3F2EA'},
+        {label:'Sin stock ahora mismo',fg:'#6B7385',bg:'#E4E8EF'}
+      ],
+      componentNames: ['ChatShell','ChatHeader','VehicleBadge','MessageBubble','QuickReplyChips','VehicleCard','VinHelpTooltip','TypingIndicator','PartInfoBlock','OemCodeCopy','CartVariantTabs','CartCard','CartItemRow','AlternativeSwitcher','FeedbackThumbs','FeedbackModal','ExpertHandoffModal','AuthModal','StatusBadge','BetaDisclaimer','ErrorState','RequestHistoryList','FloatingLauncher']
+    };
+  }
+}
+</script>
+</body>
+</html>

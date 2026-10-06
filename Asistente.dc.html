@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@500;600;700&family=Wix+Madefor+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F5F9;color:#374153;font-family:'Wix Madefor Text',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button,input,textarea{font-family:inherit}
+a{color:#253CAC}a:hover{color:#1E3190}
+@keyframes peDot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+</style>
+</helmet>
+
+<div style="width:100%;height:100%;min-height:600px;background:#F2F5F9;color:#374153;font-family:'Wix Madefor Text',system-ui,sans-serif;display:flex;flex-direction:column;position:relative;overflow:hidden">
+
+  <!-- SiteHeader -->
+  <div style="flex-shrink:0;background:#F2F5F9;border-bottom:1px solid #E4E8EF;display:flex;align-items:center;gap:16px;padding:{{ hdrPad }}">
+    <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+      <div style="display:grid;grid-template-columns:9px 9px;gap:2px"><span style="width:9px;height:9px;background:#374153;border-radius:1px"></span><span style="width:6px;height:6px;background:#374153;border-radius:1px;align-self:end"></span><span style="width:9px;height:9px;background:#374153;border-radius:1px"></span><span style="width:9px;height:9px;background:#374153;border-radius:1px"></span></div>
+      <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px;color:#374153;letter-spacing:-.01em">PiezaExacta</span>
+    </div>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+      <span style="width:1px;height:30px;background:#C9D0DB"></span>
+      <span style="font-size:13px;line-height:1.2;color:#6B7385;max-width:120px">Organización sin ánimo de lucro</span>
+    </sc-if>
+    <span style="flex:1"></span>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:32px;font-size:14px;font-weight:600;color:#374153;align-items:center">
+        <span>Sobre nosotros</span><span onClick="{{ goBlog }}" style="cursor:pointer">Centro de información</span><span onClick="{{ goStart }}" style="cursor:pointer;color:#253CAC">Asistente</span><span>Contactos</span>
+        <button onClick="{{ goHistory }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:13px;padding:8px 14px;border-radius:8px;cursor:pointer">Mis solicitudes</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+      <button onClick="{{ goHistory }}" style="border:0;background:transparent;color:#253CAC;font-weight:600;font-size:13px;padding:8px 4px;cursor:pointer;white-space:nowrap;flex-shrink:0">Mis solicitudes</button>
+      <div style="display:flex;flex-direction:column;gap:4px;padding:10px 4px"><span style="width:20px;height:2px;background:#374153;border-radius:2px"></span><span style="width:20px;height:2px;background:#374153;border-radius:2px"></span><span style="width:20px;height:2px;background:#374153;border-radius:2px"></span></div>
+    </sc-if>
+  </div>
+
+  <!-- ===== START ===== -->
+  <sc-if value="{{ isStart }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;min-height:0;overflow:auto">
+      <div style="max-width:1120px;margin:0 auto;padding:{{ startPad }};display:grid;grid-template-columns:{{ startCols }};gap:{{ startGap }};align-items:start">
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-size:15px;font-weight:600;color:#6B7385">Asistente de piezas</span>
+            <h1 style="margin:0;font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:{{ h1Size }};line-height:1.12;letter-spacing:-.015em;color:#374153;text-wrap:balance">Encuentra la pieza exacta para tu coche</h1>
+            <p style="margin:0;font-size:16px;line-height:1.55;color:#374153;text-wrap:pretty">Describe con tus palabras lo que necesitas. Te explicamos qué referencia encaja con tu coche y por qué, con sus códigos OEM y equivalencias.</p>
+          </div>
+          <div style="background:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(55,65,83,.06)">
+            <input value="{{ query }}" onChange="{{ onQuery }}" onKeyDown="{{ onQueryKey }}" placeholder="Ej.: pastillas de freno para Golf 7" style="border:0;outline:none;font-size:17px;padding:10px 8px;color:#374153;background:transparent;width:100%">
+            <button onClick="{{ onStart }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:16px;padding:14px 20px;border-radius:8px;cursor:pointer">Buscar pieza</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:13px;color:#6B7385">Prueba con:</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ examples }}" as="ex" hint-placeholder-count="4">
+                <button onClick="{{ ex.onClick }}" style="border:0;background:#E4E8EF;color:#374153;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer">{{ ex.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="background:#fff;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(55,65,83,.06)">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:18px">Tu coche</span><span style="font-size:12px;color:#6B7385">Opcional, pero más exacto</span></div>
+            <sc-if value="{{ hasVehicle }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#F2F5F9;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ vehicle.make }} {{ vehicle.model }} {{ vehicle.engine }}</span><span style="font-size:13px;color:#6B7385">{{ vehicle.year }} · Motor {{ vehicle.code }} · {{ vehicle.power }}</span></div>
+            </sc-if>
+            <sc-if value="{{ noVehicle }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr;background:#E4E8EF;border-radius:8px;padding:3px">
+                <sc-for list="{{ carTabs }}" as="ct" hint-placeholder-count="2">
+                  <button onClick="{{ ct.onClick }}" style="border:0;background:{{ ct.bg }};color:#374153;font-weight:{{ ct.fw }};font-size:14px;padding:8px;border-radius:6px;cursor:pointer">{{ ct.label }}</button>
+                </sc-for>
+              </div>
+              <input value="{{ carInput }}" onChange="{{ onCarInput }}" placeholder="{{ carPh }}" style="border:1px solid #D3D9E3;border-radius:8px;padding:12px;font-size:15px;font-family:'JetBrains Mono',monospace;color:#374153;outline:none;width:100%">
+              <button onClick="{{ toggleVinTip }}" style="border:0;background:transparent;color:#253CAC;font-size:14px;padding:0;cursor:pointer;text-align:left">¿Dónde encuentro el VIN?</button>
+              <sc-if value="{{ vinTip }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#F2F5F9;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45">
+                  <sc-for list="{{ vinPlaces }}" as="vp" hint-placeholder-count="3">
+                    <div style="display:flex;gap:10px"><span style="width:20px;height:20px;border-radius:50%;background:#E4E8EF;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ vp.n }}</span><span><strong>{{ vp.t }}</strong> — {{ vp.d }}</span></div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <button onClick="{{ saveCar }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:15px;padding:11px;border-radius:8px;cursor:pointer">Añadir mi coche</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{ showBeta }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;gap:10px;align-items:flex-start;background:#E4E8EF;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45;color:#374153"><span style="font-weight:700;font-size:10px;letter-spacing:.08em;background:#374153;color:#fff;border-radius:4px;padding:3px 6px;margin-top:1px">BETA</span><span>Asistente IA en fase beta. Para una compatibilidad 100 % garantizada, <span onClick="{{ openExpert }}" style="color:#253CAC;font-weight:600;cursor:pointer">consulta a un experto</span>.</span></div>
+          </sc-if>
+          <p style="margin:0;font-size:13px;color:#6B7385;line-height:1.5">Somos una organización sin ánimo de lucro: no vendemos piezas. Si quieres comprarla, te enlazamos carritos ya preparados en avtopro.es.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== BLOG + FloatingLauncher ===== -->
+  <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;min-height:0;overflow:auto">
+      <div style="max-width:820px;margin:0 auto;padding:{{ startPad }};display:flex;flex-direction:column;gap:18px">
+        <span style="font-size:13px;color:#6B7385">Centro de información › Diagnóstico de averías</span>
+        <h1 style="margin:0;font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:{{ h1Size }};line-height:1.15;letter-spacing:-.01em;text-wrap:balance">Cómo saber si las pastillas de freno están gastadas</h1>
+        <div style="height:{{ blogImgH }};border-radius:12px;background:repeating-linear-gradient(135deg,#E4E8EF 0 8px,#DCE1E9 8px 16px);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:#6B7385">foto: pastilla nueva vs. gastada</div>
+        <p style="margin:0;font-size:16px;line-height:1.65">El chirrido metálico al frenar suele ser la primera señal. Muchas pastillas llevan un pequeño testigo que roza el disco cuando queda poco material, precisamente para avisarte.</p>
+        <p style="margin:0;font-size:16px;line-height:1.65">Otras pistas: el pedal se hunde más de lo normal, el coche tira hacia un lado o se enciende el testigo de desgaste en el cuadro. Como referencia, conviene cambiarlas cuando el material de fricción baja de 3 mm.</p>
+        <p style="margin:0;font-size:16px;line-height:1.65">Antes de comprar, comprueba la medida del disco: un mismo modelo puede montar distintas pinzas según el motor y el equipamiento.</p>
+        <div style="height:120px"></div>
+      </div>
+    </div>
+    <div style="position:absolute;right:16px;bottom:16px;display:flex;flex-direction:column;align-items:flex-end;gap:10px;z-index:5">
+      <sc-if value="{{ launcherTip }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#fff;border-radius:12px;padding:12px 14px;max-width:260px;box-shadow:0 8px 24px rgba(55,65,83,.16);font-size:14px;line-height:1.45;display:flex;gap:10px;align-items:flex-start">
+          <span>¿No sabes qué pieza necesita tu coche? Te ayudo a encontrar la exacta.</span>
+          <button onClick="{{ closeTip }}" style="border:0;background:transparent;color:#6B7385;font-size:16px;cursor:pointer;padding:0;line-height:1">×</button>
+        </div>
+      </sc-if>
+      <button onClick="{{ openLauncher }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:14px 18px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(37,60,172,.32)"><span style="width:22px;height:22px;border-radius:50%;background:#fff;color:#253CAC;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">IA</span>Preguntar al asistente</button>
+    </div>
+  </sc-if>
+
+  <!-- ===== HISTORY ===== -->
+  <sc-if value="{{ isHistory }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;min-height:0;overflow:auto">
+      <div style="max-width:820px;margin:0 auto;padding:{{ startPad }};display:flex;flex-direction:column;gap:16px">
+        <button onClick="{{ goStart }}" style="align-self:flex-start;border:0;background:transparent;color:#253CAC;font-size:14px;padding:0;cursor:pointer">← Volver al asistente</button>
+        <h1 style="margin:0;font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:28px">Mis solicitudes</h1>
+        <sc-if value="{{ noUser }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;align-items:flex-start"><span style="font-weight:600">Inicia sesión para ver tus solicitudes</span><span style="font-size:14px;color:#6B7385">Guardamos tus consultas y las respuestas de los expertos para que puedas volver a ellas.</span><button onClick="{{ openAuth }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:11px 18px;border-radius:8px;cursor:pointer">Iniciar sesión</button></div>
+        </sc-if>
+        <sc-if value="{{ hasUser }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size:13px;color:#6B7385;line-height:1.5">Al abrir una solicitud antigua volvemos a comprobar precios y disponibilidad.</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ history }}" as="h" hint-placeholder-count="5">
+              <button onClick="{{ h.onClick }}" style="border:0;background:#fff;border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;display:flex;gap:12px;align-items:center;color:#374153">
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span style="font-weight:600;font-size:15px">{{ h.part }}</span><span style="font-size:12px;color:#6B7385">{{ h.date }}</span></div>
+                  <span style="font-size:13px;color:#6B7385">{{ h.car }}</span>
+                  <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ h.bg }};color:{{ h.fg }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ h.fg }}"></span>{{ h.status }}</span>
+                </div>
+                <span style="font-size:20px;color:#9AA3B2">›</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===== CHAT ===== -->
+  <sc-if value="{{ isChat }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;min-height:0;display:flex;justify-content:center;padding:{{ chatOuterPad }}">
+      <div style="flex:1;max-width:1180px;min-height:0;display:flex;gap:24px">
+        <!-- ChatShell -->
+        <div style="flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:#fff;border-radius:{{ shellR }};overflow:hidden">
+          <!-- ChatHeader -->
+          <div style="flex-shrink:0;border-bottom:1px solid #E4E8EF;padding:10px 14px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:32px;height:32px;border-radius:50%;background:#E8ECF8;color:#253CAC;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">IA</span>
+              <div style="display:flex;flex-direction:column;flex:1;min-width:0"><span style="font-weight:600;font-size:15px;display:flex;gap:6px;align-items:center">Asistente Pieza Exacta <span style="font-size:10px;font-weight:700;letter-spacing:.06em;background:#E4E8EF;color:#374153;border-radius:4px;padding:2px 5px">BETA</span></span><span style="font-size:12px;color:#6B7385">{{ headerSub }}</span></div>
+              <sc-if value="{{ expertOn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#F8EEDF;color:#9A5B13"><span style="width:6px;height:6px;border-radius:50%;background:#9A5B13"></span>Con un experto</span></sc-if>
+            </div>
+            <sc-if value="{{ hasVehicle }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:10px;background:#F2F5F9;border-radius:8px;padding:8px 10px">
+                <span style="font-size:11px;font-weight:600;color:#6B7385;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;flex-shrink:0">Tu coche</span>
+                <span style="flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ vehicleShort }}</span>
+                <button onClick="{{ changeCarHeader }}" style="border:0;background:transparent;color:#253CAC;font-size:13px;font-weight:600;cursor:pointer;padding:0;white-space:nowrap;flex-shrink:0">Cambiar</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noVehicle }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;align-items:center;gap:10px;background:#F2F5F9;border-radius:8px;padding:8px 10px">
+                <span style="flex:1;font-size:13px;color:#374153">Añade tu coche para resultados exactos</span>
+                <button onClick="{{ addCarHeader }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-size:13px;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:7px;white-space:nowrap;flex-shrink:0">Añadir mi coche</button>
+              </div>
+            </sc-if>
+          </div>
+
+          <!-- Messages -->
+          <div ref="{{ listRef }}" style="flex:1;min-height:0;overflow:auto;position:relative;padding:16px 14px 20px;display:flex;flex-direction:column;gap:14px;background:#FAFBFD">
+            <sc-if value="{{ betaInChat }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:8px;align-items:flex-start;background:#E4E8EF;border-radius:10px;padding:9px 12px;font-size:12px;line-height:1.45;flex-shrink:0"><span style="font-weight:700;font-size:10px;letter-spacing:.08em;background:#374153;color:#fff;border-radius:4px;padding:2px 5px;margin-top:1px">BETA</span><span>Asistente IA en fase beta. Para una compatibilidad 100 % garantizada, consulta a un experto.</span></div>
+            </sc-if>
+            <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:8px;flex-shrink:0">
+                <sc-if value="{{ m.isUser }}">
+                  <div style="align-self:flex-end;max-width:82%;background:#253CAC;color:#fff;padding:10px 14px;border-radius:16px 16px 4px 16px;font-size:15px;line-height:1.45;word-break:break-word">{{ m.text }}</div>
+                </sc-if>
+
+                <sc-if value="{{ m.isAi }}">
+                  <div style="display:flex;gap:8px;align-items:flex-start;max-width:{{ msgMax }}">
+                    <span style="width:28px;height:28px;border-radius:50%;background:#E8ECF8;color:#253CAC;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">IA</span>
+                    <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                      <div style="background:{{ m.bubbleBg }};border:1px solid {{ m.bubbleBorder }};padding:10px 14px;border-radius:4px 16px 16px 16px;font-size:15px;line-height:1.5;text-wrap:pretty">{{ m.text }}</div>
+                      <sc-if value="{{ m.hasHint }}">
+                        <div style="background:#F2F5F9;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:12px;color:#6B7385">Cómo comprobarlo</span><span>{{ m.hint }}</span></div>
+                      </sc-if>
+                      <sc-if value="{{ m.hasVinHelp }}">
+                        <div style="background:#F2F5F9;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.45;display:flex;flex-direction:column;gap:8px">
+                          <span style="font-weight:600;font-size:12px;color:#6B7385">Dónde encontrar el VIN</span>
+                          <sc-for list="{{ vinPlaces }}" as="vp" hint-placeholder-count="3">
+                            <div style="display:flex;gap:8px"><span style="width:18px;height:18px;border-radius:50%;background:#E4E8EF;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ vp.n }}</span><span><strong>{{ vp.t }}</strong> — {{ vp.d }}</span></div>
+                          </sc-for>
+                          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6B7385">Ejemplo: WVWZZZ<strong style="color:#374153">AUZFW805412</strong></span>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </div>
+                  <sc-if value="{{ m.showChips }}">
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;padding-left:36px">
+                      <sc-for list="{{ m.chipsList }}" as="c">
+                        <button onClick="{{ c.onClick }}" style="border:{{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:14px;font-weight:500;padding:9px 14px;border-radius:999px;cursor:pointer">{{ c.label }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </sc-if>
+
+                <sc-if value="{{ m.isExpert }}">
+                  <div style="display:flex;gap:8px;align-items:flex-start;max-width:{{ msgMax }}">
+                    <span style="width:28px;height:28px;border-radius:50%;background:#9A5B13;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">MR</span>
+                    <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                      <div style="display:flex;gap:6px;align-items:center;font-size:12px"><strong>{{ m.name }}</strong><span style="background:#9A5B13;color:#fff;font-weight:600;border-radius:4px;padding:1px 6px;font-size:11px">Experto</span><span style="color:#6B7385">Persona real</span></div>
+                      <div style="background:#F8EEDF;border:1px solid #EBD7BC;padding:10px 14px;border-radius:4px 16px 16px 16px;font-size:15px;line-height:1.5;text-wrap:pretty">{{ m.text }}</div>
+                      <sc-if value="{{ m.hasAction }}"><button onClick="{{ m.onAction }}" style="align-self:flex-start;border:1px solid #9A5B13;background:#fff;color:#9A5B13;font-weight:600;font-size:14px;padding:8px 14px;border-radius:8px;cursor:pointer">{{ m.action }}</button></sc-if>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isSystem }}">
+                  <div style="align-self:center;font-size:12px;color:#6B7385;background:#EDF0F5;padding:5px 12px;border-radius:999px;text-align:center">{{ m.text }}</div>
+                </sc-if>
+
+                <sc-if value="{{ m.isStatus }}">
+                  <div style="align-self:stretch;background:#F8EEDF;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+                    <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:#fff;color:#9A5B13"><span style="width:6px;height:6px;border-radius:50%;background:#9A5B13"></span>Con un experto</span>
+                    <span style="font-weight:600;font-size:15px">Tu solicitud está con un experto</span>
+                    <span style="font-size:13px;line-height:1.45">{{ m.text }}</span>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isTyping }}">
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <span style="width:28px;height:28px;border-radius:50%;background:{{ m.avBg }};color:{{ m.avFg }};font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">{{ m.av }}</span>
+                    <div style="background:#fff;border:1px solid #E4E8EF;padding:10px 14px;border-radius:4px 16px 16px 16px;display:flex;gap:10px;align-items:center;font-size:13px;color:#6B7385">{{ typingDots }}<span>{{ m.label }}</span></div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isVehicle }}">
+                  <div style="margin-left:36px;max-width:340px;background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px">
+                    <span style="font-size:12px;font-weight:600;color:#6B7385">Hemos identificado tu coche</span>
+                    <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:18px">Volkswagen Golf VII 1.6 TDI</span><span style="font-size:14px;color:#6B7385">2015 · Motor CLHA · 110 CV · Diésel</span></div>
+                    <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12px;background:#F2F5F9;border-radius:8px;padding:8px 10px"><span style="color:#6B7385">VIN</span><span style="font-family:'JetBrains Mono',monospace">WVWZZZAUZFW805412</span><span style="color:#6B7385">Carrocería</span><span>Hatchback 5 puertas</span></div>
+                    <sc-if value="{{ m.vehPending }}">
+                      <div style="display:flex;gap:8px;flex-wrap:wrap">
+                        <button onClick="{{ m.onYes }}" style="flex:1;border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:11px 14px;border-radius:8px;cursor:pointer">Sí, es mi coche</button>
+                        <button onClick="{{ m.onChange }}" style="flex:1;border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:15px;padding:10px 14px;border-radius:8px;cursor:pointer">Cambiar coche</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ m.vehDone }}"><span style="font-size:13px;color:#2F7A55;font-weight:600">✓ Confirmado</span></sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isLowConf }}">
+                  <div style="background:#FBF1DA;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+                    <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:#fff;color:#8F5E00"><span style="width:6px;height:6px;border-radius:50%;background:#8F5E00"></span>Confianza baja</span>
+                    <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:17px">Requiere verificación de un especialista</span>
+                    <span style="font-size:14px;line-height:1.5;text-wrap:pretty">Tu coche se fabricó con dos sistemas de freno distintos y los datos del VIN no permiten distinguirlos con seguridad. Para no arriesgarte a comprar la pieza equivocada, un experto puede revisarlo gratis.</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <button onClick="{{ m.onExpert }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:14px;padding:10px 14px;border-radius:8px;cursor:pointer">Consultar a un experto</button>
+                      <button onClick="{{ m.onAnyway }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:14px;padding:9px 14px;border-radius:8px;cursor:pointer">Ver resultado de todos modos</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isError }}">
+                  <div style="background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+                    <span style="width:32px;height:32px;border-radius:8px;background:{{ m.errBg }};color:{{ m.errFg }};font-weight:700;display:flex;align-items:center;justify-content:center">!</span>
+                    <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:17px">{{ m.title }}</span>
+                    <span style="font-size:14px;line-height:1.5;color:#374153;text-wrap:pretty">{{ m.text }}</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+                      <button onClick="{{ m.onBtn }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:14px;padding:10px 14px;border-radius:8px;cursor:pointer">{{ m.btn }}</button>
+                      <button onClick="{{ m.onExpert }}" style="border:0;background:transparent;color:#253CAC;font-weight:600;font-size:14px;padding:10px 4px;cursor:pointer">Hablar con un experto</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isRating }}">
+                  <div style="background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+                    <span style="font-size:14px;font-weight:600">{{ ratingTitle }}</span>
+                    <div style="display:flex;gap:8px">
+                      <sc-for list="{{ ratingBtns }}" as="rb" hint-placeholder-count="5">
+                        <button onClick="{{ rb.onClick }}" style="width:40px;height:40px;border-radius:50%;border:1px solid {{ rb.border }};background:{{ rb.bg }};color:{{ rb.fg }};font-weight:600;font-size:15px;cursor:pointer">{{ rb.n }}</button>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:11px;color:#6B7385;max-width:230px"><span>Nada útil</span><span>Muy útil</span></div>
+                  </div>
+                </sc-if>
+
+                <!-- RESULT -->
+                <sc-if value="{{ m.isResult }}">
+                  <div data-result="1" style="display:flex;flex-direction:column;gap:12px">
+                    <!-- A. PartInfoBlock -->
+                    <div style="background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px">
+                      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+                        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:12px;font-weight:600;color:#6B7385">Pieza para tu coche</span><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px;line-height:1.2">Pastillas de freno delanteras</span><span style="font-size:13px;color:#6B7385">Juego de 4 · eje delantero · {{ res.g.label }}</span></div>
+                        <span style="flex-shrink:0;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#E3F2EA;color:#2F7A55"><span style="width:6px;height:6px;border-radius:50%;background:#2F7A55"></span>Compatible</span>
+                      </div>
+                      <sc-if value="{{ m.both }}">
+                        <div style="display:flex;flex-direction:column;gap:6px">
+                          <span style="font-size:12px;color:#6B7385">¿Qué disco tiene tu coche?</span>
+                          <div style="display:grid;grid-template-columns:1fr 1fr;background:#E4E8EF;border-radius:8px;padding:3px">
+                            <sc-for list="{{ res.groupBtns }}" as="gb" hint-placeholder-count="2">
+                              <button onClick="{{ gb.onClick }}" style="border:0;background:{{ gb.bg }};color:#374153;font-weight:{{ gb.fw }};font-size:14px;padding:8px;border-radius:6px;cursor:pointer">{{ gb.label }}</button>
+                            </sc-for>
+                          </div>
+                        </div>
+                      </sc-if>
+                      <div style="display:flex;flex-direction:column;gap:6px">
+                        <span style="font-size:12px;font-weight:600;color:#6B7385">Códigos OEM (originales del fabricante)</span>
+                        <sc-for list="{{ res.oem }}" as="oc" hint-placeholder-count="2">
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:#F2F5F9;border-radius:8px;padding:8px 10px">
+                            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500">{{ oc.code }}</span>
+                            <button onClick="{{ oc.onCopy }}" style="border:0;background:transparent;color:#253CAC;font-size:13px;font-weight:600;cursor:pointer;padding:2px 4px">{{ oc.label }}</button>
+                          </div>
+                        </sc-for>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:6px">
+                        <span style="font-size:12px;font-weight:600;color:#6B7385">Equivalentes de otras marcas</span>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px">
+                          <sc-for list="{{ res.analogs }}" as="an" hint-placeholder-count="4">
+                            <span style="display:inline-flex;gap:6px;align-items:baseline;border:1px solid #DDE2EA;border-radius:8px;padding:6px 9px;font-size:13px"><strong>{{ an.b }}</strong><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6B7385">{{ an.r }}</span></span>
+                          </sc-for>
+                        </div>
+                      </div>
+                      <div style="background:#E8ECF8;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px"><span style="font-size:13px;font-weight:600;color:#253CAC">Por qué es compatible con tu coche</span><span style="font-size:14px;line-height:1.5;text-wrap:pretty">{{ res.g.why }}</span></div>
+                    </div>
+
+                    <!-- B–E. Carts -->
+                    <sc-if value="{{ m.showCarts }}">
+                      <div style="background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">Dónde conseguirla</span><span style="font-size:13px;color:#6B7385">Carritos ya preparados en avtopro.es</span></div>
+                        <sc-if value="{{ res.isTabs }}">
+                          <div style="display:grid;grid-template-columns:repeat({{ res.tabCount }},minmax(0,1fr));gap:6px">
+                            <sc-for list="{{ res.tabs }}" as="tb" hint-placeholder-count="3">
+                              <button onClick="{{ tb.onClick }}" style="border:1px solid {{ tb.border }};background:{{ tb.bg }};border-radius:10px;padding:8px 8px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:2px;color:#374153"><span style="font-size:12px;font-weight:600;line-height:1.25">{{ tb.label }}</span><span style="font-size:15px;font-weight:700">{{ tb.total }}</span><span style="font-size:11px;color:#6B7385">{{ tb.meta }}</span></button>
+                            </sc-for>
+                          </div>
+                        </sc-if>
+                        <div style="display:flex;gap:10px;overflow-x:{{ res.ox }};scroll-snap-type:x mandatory;margin:0 -14px;padding:0 14px 4px">
+                          <sc-for list="{{ res.carts }}" as="ck" hint-placeholder-count="1">
+                            <div style="flex:0 0 {{ res.cardW }};scroll-snap-align:start;border:1px solid #DDE2EA;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:#fff">
+                              <sc-if value="{{ res.isCarousel }}"><span style="align-self:flex-start;font-size:12px;font-weight:600;background:#E4E8EF;border-radius:999px;padding:4px 10px">{{ ck.label }}</span></sc-if>
+                              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;background:#F2F5F9;border-radius:8px;padding:10px">
+                                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#6B7385">Total</span><span style="font-size:16px;font-weight:700">{{ ck.total }}</span></div>
+                                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#6B7385">Entrega</span><span style="font-size:14px;font-weight:600">{{ ck.eta }}</span></div>
+                                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#6B7385">Envíos</span><span style="font-size:14px;font-weight:600">{{ ck.sellers }}</span></div>
+                              </div>
+                              <sc-for list="{{ ck.items }}" as="it" hint-placeholder-count="2">
+                                <div style="display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;padding-top:10px;border-top:1px solid #EDF0F5">
+                                  <div style="width:56px;height:56px;border-radius:8px;background:repeating-linear-gradient(135deg,#EDF0F5 0 5px,#E4E8EF 5px 10px);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:#9AA3B2">foto</div>
+                                  <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+                                    <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:12px;color:#6B7385;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</span><span style="font-weight:700;font-size:15px;white-space:nowrap">{{ it.price }}</span></div>
+                                    <div style="display:flex;gap:6px;align-items:baseline;flex-wrap:wrap"><strong style="font-size:14px">{{ it.brand }}</strong><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6B7385">{{ it.ref }}</span></div>
+                                    <span style="font-size:12px;color:#6B7385">{{ it.seller }} · ★ {{ it.rating }} · {{ it.eta }}</span>
+                                    <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:2px">
+                                      <div style="display:flex;align-items:center;gap:4px">
+                                        <button onClick="{{ it.prev }}" style="width:30px;height:30px;border-radius:50%;border:1px solid #DDE2EA;background:#fff;color:#374153;cursor:pointer;opacity:{{ it.prevOp }};font-size:14px">‹</button>
+                                        <span style="font-size:11px;color:#6B7385;min-width:70px;text-align:center">{{ it.altLabel }}</span>
+                                        <button onClick="{{ it.next }}" style="width:30px;height:30px;border-radius:50%;border:1px solid #DDE2EA;background:#fff;color:#374153;cursor:pointer;opacity:{{ it.nextOp }};font-size:14px">›</button>
+                                      </div>
+                                      <div style="display:flex;gap:4px">
+                                        <button onClick="{{ it.up }}" style="width:32px;height:30px;border-radius:8px;border:1px solid {{ it.upBorder }};background:{{ it.upBg }};cursor:pointer;font-size:14px">👍</button>
+                                        <button onClick="{{ it.down }}" style="width:32px;height:30px;border-radius:8px;border:1px solid {{ it.downBorder }};background:{{ it.downBg }};cursor:pointer;font-size:14px">👎</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </sc-for>
+                              <span style="font-size:11px;color:#6B7385">Incluye {{ ck.ship }} de envío</span>
+                            </div>
+                          </sc-for>
+                        </div>
+                        <!-- D. Notes -->
+                        <div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#6B7385;line-height:1.45">
+                          <span>ⓘ Precios y disponibilidad actualizados a las 14:32, pueden cambiar.</span>
+                          <span>ⓘ El pedido puede dividirse en varios envíos.</span>
+                        </div>
+                        <!-- E. CTA -->
+                        <div style="display:flex;flex-direction:column;gap:8px">
+                          <button onClick="{{ openAvtopro }}" style="border:1px solid #C9D0DB;background:#F2F5F9;color:#374153;font-weight:600;font-size:14px;padding:11px 14px;border-radius:8px;cursor:pointer">Abrir carrito en avtopro.es ↗</button>
+                          <div style="display:flex;gap:8px">
+                            <button onClick="{{ copyAll }}" style="flex:1;border:0;background:transparent;color:#253CAC;font-weight:600;font-size:14px;padding:8px;cursor:pointer">{{ copyAllLabel }}</button>
+                            <button onClick="{{ sendEmail }}" style="flex:1;border:0;background:transparent;color:#253CAC;font-weight:600;font-size:14px;padding:8px;cursor:pointer">Enviar resultado por email</button>
+                          </div>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ m.noStock }}">
+                      <div style="background:#fff;border:1px solid #DDE2EA;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px">
+                        <span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:#E4E8EF;color:#6B7385"><span style="width:6px;height:6px;border-radius:50%;background:#6B7385"></span>Sin stock ahora mismo</span>
+                        <span style="font-size:14px;line-height:1.5">Ningún vendedor de avtopro.es la tiene disponible en este momento. Con los códigos de arriba puedes pedirla en tu taller o tienda de confianza, o pedir a un experto que busque alternativas.</span>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <button onClick="{{ openExpert }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:14px;padding:10px 14px;border-radius:8px;cursor:pointer">Hablar con un experto</button>
+                          <button onClick="{{ copyAll }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:14px;padding:9px 14px;border-radius:8px;cursor:pointer">{{ copyAllLabel }}</button>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <!-- F + next -->
+                    <button onClick="{{ openExpert }}" style="border:0;background:transparent;color:#253CAC;font-size:14px;padding:4px 0;cursor:pointer;text-align:left">¿No es lo que buscabas? <strong>Hablar con un experto</strong></button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap">
+                      <button onClick="{{ nextPart }}" style="border:0;background:#E4E8EF;color:#374153;font-weight:600;font-size:14px;padding:10px 14px;border-radius:999px;cursor:pointer">Buscar otra pieza</button>
+                      <button onClick="{{ restart }}" style="border:0;background:transparent;color:#6B7385;font-weight:600;font-size:14px;padding:10px 8px;cursor:pointer">Empezar de nuevo</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Composer -->
+          <div style="flex-shrink:0;border-top:1px solid #E4E8EF;padding:10px 12px 8px;display:flex;flex-direction:column;gap:6px;background:#fff">
+            <div style="display:flex;gap:8px;align-items:center">
+              <input value="{{ input }}" onChange="{{ onInput }}" onKeyDown="{{ onInputKey }}" placeholder="{{ inputPh }}" style="flex:1;min-width:0;border:1px solid #D3D9E3;border-radius:999px;padding:12px 16px;font-size:15px;color:#374153;outline:none;background:#F2F5F9">
+              <button onClick="{{ send }}" style="width:46px;height:46px;border-radius:50%;border:0;background:#253CAC;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">→</button>
+            </div>
+            <button onClick="{{ openExpert }}" style="border:0;background:transparent;color:#6B7385;font-size:12px;padding:4px;cursor:pointer;text-decoration:underline">La IA se ha equivocado, hablar con una persona</button>
+          </div>
+        </div>
+
+        <!-- Desktop aside -->
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+          <div style="width:300px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;overflow:auto">
+            <div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:16px">Tu coche</span>
+              <sc-if value="{{ hasVehicle }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">Volkswagen Golf VII 1.6 TDI</span><span style="font-size:13px;color:#6B7385">2015 · Motor CLHA · 110 CV</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6B7385;margin-top:4px">WVWZZZAUZFW805412</span></div>
+                <button onClick="{{ changeCarHeader }}" style="align-self:flex-start;border:0;background:transparent;color:#253CAC;font-weight:600;font-size:13px;padding:0;cursor:pointer">Cambiar coche</button>
+              </sc-if>
+              <sc-if value="{{ noVehicle }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:13px;color:#6B7385;line-height:1.45">Con el VIN o la matrícula te damos la pieza exacta, no una aproximación.</span>
+                <button onClick="{{ addCarHeader }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:14px;padding:9px;border-radius:8px;cursor:pointer">Añadir mi coche</button>
+              </sc-if>
+            </div>
+            <sc-if value="{{ showBeta }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:10px;align-items:flex-start;background:#E4E8EF;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45"><span style="font-weight:700;font-size:10px;letter-spacing:.08em;background:#374153;color:#fff;border-radius:4px;padding:3px 6px;margin-top:1px">BETA</span><span>Asistente IA en fase beta. Para una compatibilidad 100 % garantizada, consulta a un experto.</span></div>
+            </sc-if>
+            <div style="background:#fff;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+              <span style="font-weight:600;font-size:15px">¿Prefieres una persona?</span>
+              <span style="font-size:13px;color:#6B7385;line-height:1.45">Nuestros expertos revisan tu caso en este mismo chat. Es gratuito.</span>
+              <button onClick="{{ openExpert }}" style="align-self:flex-start;border:0;background:transparent;color:#253CAC;font-weight:600;font-size:14px;padding:0;cursor:pointer">Hablar con un experto →</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- Toast -->
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;bottom:96px;transform:translateX(-50%);background:#374153;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;z-index:30;box-shadow:0 8px 24px rgba(55,65,83,.25);max-width:90%;text-align:center">{{ toast }}</div>
+  </sc-if>
+
+  <!-- Modals -->
+  <sc-if value="{{ hasModal }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(55,65,83,.45);z-index:20;display:flex;align-items:{{ modalAlign }};justify-content:center">
+      <div onClick="{{ stop }}" style="background:#fff;width:100%;max-width:440px;border-radius:{{ modalR }};padding:20px 20px 22px;display:flex;flex-direction:column;gap:14px;max-height:92%;overflow:auto">
+
+        <sc-if value="{{ mAuth }}">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px">Crea tu cuenta para hablar con un experto</span><span style="font-size:14px;color:#6B7385;line-height:1.5">Es gratis. Así el experto puede responderte aunque cierres esta página.</span></div>
+          <button onClick="{{ authGoogle }}" style="border:1px solid #C9D0DB;background:#fff;color:#374153;font-weight:600;font-size:15px;padding:12px;border-radius:8px;cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:center"><span style="width:20px;height:20px;border-radius:50%;border:1px solid #C9D0DB;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center">G</span>Continuar con Google</button>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px;color:#9AA3B2"><span style="flex:1;height:1px;background:#E4E8EF"></span>o con tu email<span style="flex:1;height:1px;background:#E4E8EF"></span></div>
+          <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="tu@email.com" style="border:1px solid {{ emailBorder }};border-radius:8px;padding:12px;font-size:15px;color:#374153;outline:none">
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.45;cursor:pointer;background:{{ gdprBg }};border-radius:8px;padding:8px">
+            <input type="checkbox" checked="{{ gdpr }}" onChange="{{ toggleGdpr }}" style="width:18px;height:18px;margin:1px 0 0;accent-color:#253CAC;flex-shrink:0">
+            <span>Acepto que Pieza Exacta trate mis datos (email, coche y esta conversación) para gestionar mi consulta, según la <a href="#">Política de privacidad</a>. Puedo retirar mi consentimiento en cualquier momento.</span>
+          </label>
+          <sc-if value="{{ gdprErr }}"><span style="font-size:12px;color:#A33A3A;margin-top:-6px">Necesitamos tu consentimiento para pasar tu caso a un experto.</span></sc-if>
+          <button onClick="{{ authEmail }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:13px;border-radius:8px;cursor:pointer">Continuar</button>
+        </sc-if>
+
+        <sc-if value="{{ mHandoff }}">
+          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px">¿Dónde quieres recibir la respuesta?</span><span style="font-size:14px;color:#6B7385;line-height:1.5">El experto verá tu coche, la pieza que buscas y esta conversación. No hace falta repetir nada.</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="3">
+              <button onClick="{{ ch.onClick }}" style="border:1px solid {{ ch.border }};background:{{ ch.bg }};border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;display:flex;gap:12px;align-items:center;color:#374153">
+                <span style="width:18px;height:18px;border-radius:50%;border:2px solid {{ ch.ring }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:8px;height:8px;border-radius:50%;background:{{ ch.dot }}"></span></span>
+                <span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ ch.label }}</span><span style="font-size:12px;color:#6B7385">{{ ch.sub }}</span></span>
+              </button>
+            </sc-for>
+          </div>
+          <button onClick="{{ handoffSend }}" style="border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:13px;border-radius:8px;cursor:pointer">Enviar a un experto</button>
+          <span style="font-size:12px;color:#6B7385;text-align:center">Te avisaremos en cuanto un experto responda.</span>
+        </sc-if>
+
+        <sc-if value="{{ mFeedback }}">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px">¿Qué falla?</span><button onClick="{{ closeModal }}" style="border:0;background:transparent;font-size:20px;color:#6B7385;cursor:pointer">×</button></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ fbOptions }}" as="fo" hint-placeholder-count="4">
+              <button onClick="{{ fo.onClick }}" style="border:1px solid {{ fo.border }};background:{{ fo.bg }};border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left;font-size:15px;color:#374153;font-weight:{{ fo.fw }}">{{ fo.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ fbOther }}"><textarea value="{{ fbText }}" onChange="{{ onFbText }}" rows="3" placeholder="Cuéntanos qué ha pasado" style="border:1px solid #D3D9E3;border-radius:8px;padding:10px 12px;font-size:14px;color:#374153;resize:vertical"></textarea></sc-if>
+          <button onClick="{{ fbSend }}" style="border:0;background:{{ fbBtnBg }};color:#fff;font-weight:600;font-size:15px;padding:13px;border-radius:8px;cursor:pointer">Enviar</button>
+        </sc-if>
+
+        <sc-if value="{{ mReopen }}">
+          <span style="font-family:'Wix Madefor Display',sans-serif;font-weight:600;font-size:20px">Esta solicitud es del {{ reopenDate }}</span>
+          <span style="font-size:14px;line-height:1.5">Los precios y la disponibilidad pueden haber cambiado desde entonces. Los volveremos a comprobar al abrirla; la información técnica de la pieza sigue siendo válida.</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onClick="{{ reopenGo }}" style="flex:1;border:0;background:#253CAC;color:#fff;font-weight:600;font-size:15px;padding:12px;border-radius:8px;cursor:pointer">Abrir y actualizar precios</button>
+            <button onClick="{{ closeModal }}" style="border:1px solid #253CAC;background:#fff;color:#253CAC;font-weight:600;font-size:15px;padding:11px 16px;border-radius:8px;cursor:pointer">Cancelar</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:800},&quot;device&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;mobile&quot;,&quot;desktop&quot;],&quot;default&quot;:&quot;mobile&quot;,&quot;tsType&quot;:&quot;'mobile'|'desktop'&quot;},&quot;preset&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;demo&quot;,&quot;start&quot;,&quot;blog&quot;,&quot;vin&quot;,&quot;vin_error&quot;,&quot;vehicle&quot;,&quot;not_found&quot;,&quot;part_type&quot;,&quot;clarify&quot;,&quot;result&quot;,&quot;result_carousel&quot;,&quot;no_stock&quot;,&quot;low_conf&quot;,&quot;feedback&quot;,&quot;auth&quot;,&quot;handoff&quot;,&quot;expert&quot;,&quot;down&quot;,&quot;limit&quot;,&quot;off_topic&quot;,&quot;history&quot;,&quot;history_reopen&quot;],&quot;default&quot;:&quot;demo&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;cartLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;tabs&quot;,&quot;carousel&quot;],&quot;default&quot;:&quot;tabs&quot;,&quot;tsType&quot;:&quot;'tabs'|'carousel'&quot;},&quot;showBeta&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+const V = { make:'Volkswagen', model:'Golf VII', engine:'1.6 TDI', power:'110 CV', year:'2015', code:'CLHA', vin:'WVWZZZAUZFW805412', plate:'4821 JKV' };
+const Q = 'pastillas de freno para Golf 7';
+const GROUPS = {
+  '288': { label:'Disco 288 mm', oem:['5Q0 698 151 B','5Q0 698 151 AA'], analogs:[['Bosch','0 986 494 660'],['Brembo','P 85 126'],['ATE','13.0460-5650.2'],['TRW','GDB1550']],
+    why:'Tu VIN corresponde a la pinza delantera de serie con disco de 288 mm. Estas pastillas tienen la misma referencia OEM que Volkswagen montó de fábrica.' },
+  '312': { label:'Disco 312 mm', oem:['5Q0 698 151 D','5Q0 698 151 M'], analogs:[['Bosch','0 986 494 721'],['Brembo','P 85 153'],['ATE','13.0460-5651.2'],['TRW','GDB2047']],
+    why:'Con el freno reforzado (disco de 312 mm) la pinza es más grande y la pastilla cambia de forma. Si tu disco mide 312 mm, esta es la correcta.' }
+};
+const ALTS = {
+  '288': {
+    pads:[
+      {brand:'ATE',ref:'13.0460-5650.2',price:23.9,seller:'Frenos Iberia',rating:4.5,eta:'3–4 días',d:4},
+      {brand:'TRW',ref:'GDB1550',price:25.8,seller:'Recambios Norte',rating:4.7,eta:'2–3 días',d:3},
+      {brand:'Bosch',ref:'0 986 494 660',price:27.4,seller:'AutoPartes Levante',rating:4.8,eta:'1–2 días',d:2},
+      {brand:'Brembo',ref:'P 85 126',price:38.6,seller:'Rápido Recambios',rating:4.6,eta:'24 h',d:1}],
+    sensor:[
+      {brand:'ATE',ref:'24.8190-0299.2',price:7.9,seller:'Desguaces Sur Online',rating:4.2,eta:'4–6 días',d:6},
+      {brand:'TRW',ref:'GIC245',price:9.8,seller:'Recambios Norte',rating:4.7,eta:'2–3 días',d:3},
+      {brand:'Bosch',ref:'1 987 473 511',price:11.5,seller:'Rápido Recambios',rating:4.6,eta:'24 h',d:1}]
+  },
+  '312': {
+    pads:[
+      {brand:'ATE',ref:'13.0460-5651.2',price:31.4,seller:'Frenos Iberia',rating:4.5,eta:'3–4 días',d:4},
+      {brand:'TRW',ref:'GDB2047',price:33.9,seller:'Recambios Norte',rating:4.7,eta:'2–3 días',d:3},
+      {brand:'Bosch',ref:'0 986 494 721',price:36.2,seller:'AutoPartes Levante',rating:4.8,eta:'1–2 días',d:2},
+      {brand:'Brembo',ref:'P 85 153',price:49.9,seller:'Rápido Recambios',rating:4.6,eta:'24 h',d:1}],
+    sensor:[
+      {brand:'ATE',ref:'24.8190-0299.2',price:7.9,seller:'Desguaces Sur Online',rating:4.2,eta:'4–6 días',d:6},
+      {brand:'TRW',ref:'GIC245',price:9.8,seller:'Recambios Norte',rating:4.7,eta:'2–3 días',d:3},
+      {brand:'Bosch',ref:'1 987 473 511',price:11.5,seller:'Rápido Recambios',rating:4.6,eta:'24 h',d:1}]
+  }
+};
+const PARTS = [{key:'pads',name:'Pastillas delanteras'},{key:'sensor',name:'Sensor de desgaste'}];
+const CARTS = [
+  {id:'cheap',label:'Más barato',picks:{pads:0,sensor:0}},
+  {id:'fast',label:'Entrega más rápida',picks:{pads:2,sensor:2}},
+  {id:'few',label:'Menos vendedores',picks:{pads:1,sensor:1}}
+];
+const ETA = {1:'24 h',2:'1–2 días',3:'2–3 días',4:'3–4 días',6:'4–6 días'};
+const SHIP = 2.95;
+const eur = n => n.toFixed(2).replace('.', ',') + ' €';
+const STATUS = { progress:['En curso','#253CAC','#E8ECF8'], waiting:['Esperando tu respuesta','#8F5E00','#FBF1DA'], expert:['Con un experto','#9A5B13','#F8EEDF'], ready:['Resultado listo','#2F7A55','#E3F2EA'], closed:['Cerrado','#6B7385','#E4E8EF'] };
+const HISTORY = [
+  {part:'Pastillas de freno delanteras',car:'VW Golf VII 1.6 TDI · 2015',date:'Hoy, 14:32',st:'ready'},
+  {part:'Kit de distribución',car:'VW Golf VII 1.6 TDI · 2015',date:'28 sep 2026',st:'expert'},
+  {part:'Filtro de habitáculo',car:'Seat Ibiza 1.0 TSI · 2019',date:'21 sep 2026',st:'waiting'},
+  {part:'Escobillas delanteras',car:'Seat Ibiza 1.0 TSI · 2019',date:'21 sep 2026',st:'progress'},
+  {part:'Amortiguadores traseros',car:'Renault Clio IV 1.5 dCi · 2016',date:'2 ago 2026',st:'closed'}
+];
+const VIN_PLACES = [
+  {n:'1',t:'Permiso de circulación',d:'casilla E, 17 caracteres'},
+  {n:'2',t:'Ficha técnica (ITV)',d:'apartado «Número de bastidor»'},
+  {n:'3',t:'Base del parabrisas',d:'visible desde fuera, lado del conductor'}
+];
+let UID = 0;
+const mk = (t, o) => Object.assign({ id: ++UID, t }, o || {});
+const chip = (l, a, soft) => ({ l, a, soft });
+
+const askVin = ans => mk('ai', { text:'Entendido: buscas pastillas de freno para un Volkswagen Golf 7. Para darte la referencia exacta necesito identificar tu coche. ¿Me escribes el VIN? Son 17 caracteres.', vinHelp:true, answered:ans, chips:[chip('Usar VIN de ejemplo','vin_demo'),chip('No tengo el VIN','no_vin',1)] });
+const askPlate = ans => mk('ai', { text:'Sin problema. Escribe entonces la matrícula de tu coche, por ejemplo 1234 ABC.', answered:ans, chips:[chip('Usar matrícula de ejemplo','plate_demo'),chip('Tampoco la tengo','no_plate',1)] });
+const axle = ans => mk('ai', { text:'Perfecto. ¿Las pastillas que necesitas son delanteras o traseras?', hint:'Las delanteras se desgastan antes. Si notas chirrido o vibración al frenar, lo normal es que sean estas.', answered:ans, chips:[chip('Delanteras','axle'),chip('Traseras','axle'),chip('No lo sé','axle',1)] });
+const diam = ans => mk('ai', { text:'¿Qué diámetro tiene el disco de freno delantero: 288 mm o 312 mm?', hint:'Aparece en la ficha técnica o grabado en el borde del disco (se ve a través de la llanta). Si no lo sabes, te enseño las dos opciones.', answered:ans, chips:[chip('288 mm','d288'),chip('312 mm','d312'),chip('No lo sé','dnone',1)] });
+const intro = () => mk('ai', { text:'Tu Golf puede llevar dos medidas de disco según el equipamiento, así que te muestro las dos. Elige la tuya al principio del resultado.' });
+const vinErr = n => mk('ai', { warn:true, text:`Este VIN no parece correcto: tiene ${n} caracteres y debe tener 17. Recuerda que nunca lleva las letras I, O ni Q.`, vinHelp:true, chips:[chip('Usar VIN de ejemplo','vin_demo'),chip('No tengo el VIN','no_vin',1)] });
+const notFound = () => mk('ai', { warn:true, text:'No hemos encontrado ningún coche con la matrícula 0000 XXX. Puede ser un vehículo importado o muy reciente. Un experto puede identificarlo con una foto de la ficha técnica.', chips:[chip('Probar con el VIN','vin_again'),chip('Hablar con un experto','expert')] });
+const partType = () => mk('ai', { text:'Un ruido al frenar puede venir de varias piezas. ¿Cuál quieres revisar?', chips:[chip('Pastillas de freno','part'),chip('Discos de freno','part'),chip('Pinzas de freno','part'),chip('Latiguillos','part'),chip('Sensor de desgaste','part'),chip('Otra cosa','part_other',1)] });
+const offTopic = () => mk('ai', { text:'Solo puedo ayudarte con piezas y recambios de coche, así que esa pregunta se me escapa. Si necesitas una pieza, dime cuál y para qué coche.', chips:[chip('pastillas de freno Golf 7','example'),chip('filtro de aceite Seat León 2018','example')] });
+const askFb = () => mk('ai', { text:'Gracias por avisar. ¿Quieres que un experto revise tu caso? Es gratuito.', chips:[chip('Hablar con un experto','expert'),chip('Seguir con la IA','stay',1)] });
+const expertMsg = () => mk('expert', { name:'Marta R.', text:'Hola, soy Marta, del equipo de expertos de Pieza Exacta. He comprobado tu VIN en el catálogo del fabricante: tu Golf lleva de serie discos delanteros de 288 mm, así que la pieza correcta es la del disco de 288 mm (OEM 5Q0 698 151 B). Te recomiendo el carrito «Menos vendedores»: todo llega en un solo envío.', action:'Ver opción recomendada' });
+const head = () => [mk('user',{text:Q}), askVin(true), mk('user',{text:V.vin}), mk('vehicle',{answered:true}), mk('system',{text:'Coche guardado en tu garaje'})];
+const toResult = () => [...head(), axle(true), mk('user',{text:'Delanteras'}), diam(true), mk('user',{text:'No lo sé'}), intro(), mk('result',{both:true}), mk('rating')];
+const BASE = () => ({ view:'chat', msgs:[], stage:'idle', vehicle:null, input:'', query:Q, carTab:'vin', carInput:'', vinTip:false, group:'288', cart:0, alt:{}, thumbs:{}, copied:'', modal:null, fb:null, fbText:'', user:null, gdpr:false, gdprErr:false, email:'', emailErr:false, channel:'chat', expertOn:false, rating:0, toast:'', reopen:0, layout:null, launcherTip:true });
+
+class Component extends DCLogic {
+  state = BASE();
+  listRef = React.createRef();
+  timers = [];
+  componentDidMount() { this.applyPreset(); }
+  componentDidUpdate(pp, ps) {
+    if (pp.preset !== this.props.preset) return this.applyPreset();
+    const a = ps.msgs, b = this.state.msgs;
+    if (a !== b && b.length > a.length) {
+      const last = b[b.length - 1];
+      (last.t === 'result' || last.t === 'rating') ? this.scrollToResult() : this.scrollBottom();
+    }
+  }
+  componentWillUnmount() { this.clear(); }
+  clear() { this.timers.forEach(clearTimeout); this.timers = []; }
+  later(ms, fn) { this.timers.push(setTimeout(fn, ms)); }
+  scrollBottom() { requestAnimationFrame(() => { const el = this.listRef.current; if (el) el.scrollTop = el.scrollHeight; }); }
+  scrollToResult() {
+    const go = () => { const el = this.listRef.current; if (!el) return; const r = el.querySelector('[data-result]'); el.scrollTop = r ? r.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - 12 : el.scrollHeight; };
+    requestAnimationFrame(() => requestAnimationFrame(go)); setTimeout(go, 250); setTimeout(go, 800);
+  }
+  applyPreset() {
+    this.clear();
+    const s = this.build(this.props.preset || 'demo');
+    this.setState(Object.assign(BASE(), s), () => { s.scrollResult ? this.scrollToResult() : this.scrollBottom(); });
+  }
+  build(p) {
+    const veh = { vehicle: V };
+    switch (p) {
+      case 'start': case 'demo': return { view:'start' };
+      case 'blog': return { view:'blog' };
+      case 'vin': return { msgs:[mk('user',{text:Q}), askVin(false)], stage:'vin' };
+      case 'vin_error': return { msgs:[mk('user',{text:Q}), askVin(true), mk('user',{text:'WVWZZZAUZFW8054'}), vinErr(15)], stage:'vin' };
+      case 'vehicle': return { msgs:[mk('user',{text:Q}), askVin(true), mk('user',{text:V.vin}), mk('vehicle',{})], stage:'confirm' };
+      case 'not_found': return { msgs:[mk('user',{text:Q}), askVin(true), mk('user',{text:'No tengo el VIN'}), askPlate(true), mk('user',{text:'0000 XXX'}), notFound()], stage:'plate' };
+      case 'part_type': return { ...veh, msgs:[mk('user',{text:'Me chirría el freno al frenar, ¿qué tengo que cambiar?'}), partType()] };
+      case 'clarify': return { ...veh, msgs:[...head(), axle(true), mk('user',{text:'Delanteras'}), diam(false)], stage:'clarify' };
+      case 'result': return { ...veh, msgs:toResult(), stage:'result', scrollResult:true };
+      case 'result_carousel': return { ...veh, msgs:toResult(), stage:'result', scrollResult:true, layout:'carousel' };
+      case 'no_stock': return { ...veh, msgs:[mk('user',{text:'pastillas de freno delanteras Golf 7, disco 288'}), mk('ai',{text:'He encontrado la pieza exacta, pero ahora mismo no hay stock en avtopro.es. Te dejo toda la información técnica.'}), mk('result',{noStock:true})], scrollResult:true };
+      case 'low_conf': return { ...veh, msgs:[...head(), axle(true), mk('user',{text:'Delanteras'}), mk('lowconf')] };
+      case 'feedback': return { ...veh, msgs:toResult(), scrollResult:true, thumbs:{'288|cheap|pads':'down'}, modal:'feedback', fb:'wrong' };
+      case 'auth': return { ...veh, msgs:[...toResult(), mk('user',{text:'Hablar con un experto'})], modal:'auth' };
+      case 'handoff': return { ...veh, user:{email:'lucia.garcia@gmail.com'}, email:'lucia.garcia@gmail.com', gdpr:true, msgs:[...toResult(), mk('user',{text:'Hablar con un experto'})], modal:'handoff' };
+      case 'expert': return { ...veh, user:{email:'lucia.garcia@gmail.com'}, expertOn:true, msgs:[...toResult(), mk('user',{text:'Hablar con un experto'}), mk('status',{text:'Te responderemos aquí, en este chat. Puedes cerrar la página: también te avisaremos por email.'}), expertMsg()] };
+      case 'down': return { msgs:[mk('user',{text:Q}), mk('error',{kind:'down',title:'El servicio no está disponible ahora mismo',text:'No hemos podido consultar el catálogo. Tu mensaje no se ha perdido: vuelve a intentarlo en unos segundos.',btn:'Reintentar',act:'retry'})] };
+      case 'limit': return { msgs:[mk('user',{text:'filtro de aire Golf 7'}), mk('error',{kind:'limit',title:'Has alcanzado el límite de consultas de hoy',text:'Para que el servicio siga siendo gratuito para todos, limitamos las consultas diarias. Con una cuenta gratuita puedes hacer más, o vuelve mañana.',btn:'Crear cuenta gratuita',act:'signup'})] };
+      case 'off_topic': return { msgs:[mk('user',{text:'¿Qué tiempo hará mañana en Madrid?'}), offTopic()] };
+      case 'history': return { view:'history', user:{email:'lucia.garcia@gmail.com'} };
+      case 'history_reopen': return { view:'history', user:{email:'lucia.garcia@gmail.com'}, modal:'reopen', reopen:1 };
+      default: return { view:'start' };
+    }
+  }
+  push(...ms) { this.setState(s => ({ msgs: [...s.msgs, ...ms] })); }
+  typing(label, ms, fn, expert) {
+    const t = mk('typing', { label, expert });
+    this.push(t);
+    this.later(ms, () => { this.setState(s => ({ msgs: s.msgs.filter(m => m.id !== t.id) })); fn(); });
+  }
+  ai(ms, msg, stage) { this.typing('', ms, () => { this.push(msg); if (stage) this.setState({ stage }); }); }
+  toast(t) { this.setState({ toast: t }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2400); }
+  identify() { this.typing('Identificando tu coche…', 1100, () => { this.push(mk('vehicle', {})); this.setState({ stage: 'confirm' }); }); }
+  search(g) {
+    this.setState({ group: g || '288', cart: 0 });
+    this.typing('Buscando en el catálogo…', 1100, () => this.typing('Comprobando disponibilidad y precios…', 1200, () => {
+      this.push(...(g ? [] : [intro()]), mk('result', { both: !g }));
+      this.setState({ stage: 'result' });
+      this.later(700, () => this.push(mk('rating')));
+    }));
+  }
+  begin(q, keep) {
+    if (!keep) this.setState({ view: 'chat', msgs: [mk('user', { text: q })], stage: 'idle', query: q });
+    if (/tiempo|f[uú]tbol|receta|chiste|pol[ií]tica/i.test(q)) return this.ai(700, offTopic());
+    this.typing('Analizando tu consulta…', 900, () => {
+      if (this.state.vehicle) { this.push(axle(false)); this.setState({ stage: 'clarify' }); }
+      else { this.push(askVin(false)); this.setState({ stage: 'vin' }); }
+    });
+  }
+  act(a, id, label) {
+    this.setState(s => ({ msgs: s.msgs.map(m => m.id === id ? { ...m, answered: true } : m).concat(a === 'expert' && !label ? [] : [mk('user', { text: label })]) }));
+    switch (a) {
+      case 'vin_demo': return this.identify();
+      case 'plate_demo': return this.identify();
+      case 'no_vin': return this.ai(700, askPlate(false), 'plate');
+      case 'no_plate': return this.ai(700, mk('ai', { text:'Sin VIN ni matrícula no podemos garantizar la compatibilidad. Un experto puede ayudarte con lo que tengas: modelo, año o una foto de la ficha técnica.', chips:[chip('Hablar con un experto','expert')] }));
+      case 'vin_again': return this.ai(600, mk('ai', { text:'Vale. Escribe el VIN de tu coche (17 caracteres).', vinHelp:true, chips:[chip('Usar VIN de ejemplo','vin_demo')] }), 'vin');
+      case 'part': return this.ai(800, axle(false), 'clarify');
+      case 'part_other': return this.ai(600, mk('ai', { text:'Cuéntame con tus palabras qué pieza es o qué notas en el coche: un ruido, una vibración, un testigo encendido…' }), 'idle');
+      case 'axle': return this.ai(800, diam(false), 'clarify');
+      case 'd288': return this.search('288');
+      case 'd312': return this.search('312');
+      case 'dnone': return this.search(null);
+      case 'expert': return this.openExpert();
+      case 'stay': return this.ai(600, mk('ai', { text:'De acuerdo. Puedes ver otras marcas con las flechas de cada pieza, o escríbeme qué no encaja.' }));
+      case 'example': return this.begin(label, true);
+    }
+  }
+  openExpert() { this.setState(s => ({ modal: s.user ? 'handoff' : 'auth', gdprErr: false })); }
+  doAuth(google) {
+    const s = this.state;
+    if (!s.gdpr) return this.setState({ gdprErr: true });
+    const email = google ? 'lucia.garcia@gmail.com' : s.email;
+    if (!google && !/.+@.+\..+/.test(email)) return this.setState({ emailErr: true });
+    this.setState({ user: { email }, email, modal: this.afterAuthNone ? null : 'handoff' });
+    if (this.afterAuthNone) { this.afterAuthNone = false; this.toast('Cuenta creada. Ya puedes seguir consultando.'); }
+  }
+  handoffSend() {
+    const s = this.state;
+    const sub = s.channel === 'chat' ? 'Te responderemos aquí, en este chat. Puedes cerrar la página: también te avisaremos por email.' : s.channel === 'whatsapp' ? 'Te escribiremos por WhatsApp. Esta conversación queda guardada en «Mis solicitudes».' : `Te escribiremos a ${s.user.email}. Esta conversación queda guardada en «Mis solicitudes».`;
+    this.setState({ modal: null, expertOn: true });
+    this.push(mk('status', { text: sub }));
+    this.later(2200, () => this.typing('Marta está escribiendo…', 2200, () => this.push(expertMsg()), true));
+  }
+  send() {
+    const text = this.state.input.trim();
+    if (!text) return;
+    const st = this.state.stage;
+    this.setState({ input: '' });
+    this.push(mk('user', { text }));
+    if (st === 'vin') {
+      const c = text.replace(/[\s-]/g, '').toUpperCase();
+      if (/^[A-HJ-NPR-Z0-9]{17}$/.test(c) || /^\d{4}[A-Z]{3}$/.test(c)) return this.identify();
+      return this.ai(700, vinErr(c.length));
+    }
+    if (st === 'plate') return /0000/.test(text) ? this.ai(800, notFound()) : this.identify();
+    if (/tiempo|f[uú]tbol|receta|chiste|pol[ií]tica/i.test(text)) return this.ai(700, offTopic());
+    if (/ruido|chirr|freno/i.test(text) && !/pastill/i.test(text)) return this.ai(800, partType());
+    this.begin(text, true);
+  }
+  renderVals() {
+    const s = this.state, P = this.props;
+    const desk = (P.device || 'mobile') === 'desktop';
+    const layout = s.layout || P.cartLayout || 'tabs';
+    const g = GROUPS[s.group];
+    const set = o => () => this.setState(o);
+    const carts = CARTS.filter(c => PARTS.length > 1 || c.id !== 'few').map((c, ci) => {
+      const items = PARTS.map(p => {
+        const list = ALTS[s.group][p.key], k = `${s.group}|${c.id}|${p.key}`;
+        const idx = s.alt[k] ?? c.picks[p.key], a = list[idx], th = s.thumbs[k];
+        const go = d => () => { const n = idx + d; if (n >= 0 && n < list.length) this.setState(st => ({ alt: { ...st.alt, [k]: n } })); };
+        return { ...a, name:p.name, price:eur(a.price), rating:String(a.rating).replace('.', ','), altLabel:`${idx + 1} de ${list.length} · por precio`,
+          prev:go(-1), next:go(1), prevOp: idx > 0 ? 1 : .35, nextOp: idx < list.length - 1 ? 1 : .35, _p:a.price, _s:a.seller, _d:a.d,
+          upBg: th === 'up' ? '#E3F2EA' : '#fff', upBorder: th === 'up' ? '#2F7A55' : '#DDE2EA', downBg: th === 'down' ? '#F9E7E7' : '#fff', downBorder: th === 'down' ? '#A33A3A' : '#DDE2EA',
+          up: () => { this.setState(st => ({ thumbs: { ...st.thumbs, [k]: 'up' } })); this.toast('Gracias, nos ayuda a mejorar'); },
+          down: () => this.setState(st => ({ thumbs: { ...st.thumbs, [k]: 'down' }, modal: 'feedback', fb: null })) };
+      });
+      const sellers = new Set(items.map(i => i._s)).size;
+      const sum = items.reduce((t, i) => t + i._p, 0) + sellers * SHIP;
+      const eta = ETA[Math.max(...items.map(i => i._d))];
+      return { id:c.id, label:c.label, items, total:eur(sum), eta, sellers: sellers === 1 ? '1 vendedor' : `${sellers} vendedores`, ship:eur(sellers * SHIP), idx:ci };
+    });
+    const res = {
+      g, isTabs: layout === 'tabs', isCarousel: layout === 'carousel', tabCount: carts.length,
+      ox: layout === 'carousel' ? 'auto' : 'visible', cardW: layout === 'carousel' ? (desk ? 'calc(50% - 5px)' : '86%') : '100%',
+      carts: layout === 'carousel' ? carts : [carts[Math.min(s.cart, carts.length - 1)]],
+      tabs: carts.map((c, i) => ({ label:c.label, total:c.total, meta:`${c.eta} · ${c.sellers}`, onClick:set({ cart:i }), bg: i === s.cart ? '#E8ECF8' : '#fff', border: i === s.cart ? '#253CAC' : '#DDE2EA' })),
+      groupBtns: ['288','312'].map(k => ({ label:GROUPS[k].label, onClick:set({ group:k }), bg: s.group === k ? '#fff' : 'transparent', fw: s.group === k ? 600 : 500 })),
+      oem: g.oem.map(code => ({ code, label: s.copied === code ? 'Copiado ✓' : 'Copiar', onCopy: () => this.copy(code, code) })),
+      analogs: g.analogs.map(([b, r]) => ({ b, r }))
+    };
+    const allCodes = [...g.oem, ...g.analogs.map(a => `${a[0]} ${a[1]}`)].join('\n');
+    const msgs = s.msgs.map(m => {
+      const isTyping = m.t === 'typing';
+      return { ...m,
+        isUser:m.t === 'user', isAi:m.t === 'ai', isExpert:m.t === 'expert', isSystem:m.t === 'system', isStatus:m.t === 'status', isTyping,
+        isVehicle:m.t === 'vehicle', isResult:m.t === 'result', isLowConf:m.t === 'lowconf', isError:m.t === 'error', isRating:m.t === 'rating',
+        av: m.expert ? 'MR' : 'IA', avBg: m.expert ? '#9A5B13' : '#E8ECF8', avFg: m.expert ? '#fff' : '#253CAC', label: m.label || '',
+        bubbleBg: m.warn ? '#FBF1DA' : '#fff', bubbleBorder: m.warn ? '#F0DDB0' : '#E4E8EF',
+        hasHint: !!m.hint, hasVinHelp: !!m.vinHelp && !m.answered,
+        showChips: !!(m.chips && !m.answered),
+        chipsList: (m.chips || []).map(c => ({ label:c.l, onClick: () => this.act(c.a, m.id, c.l), border: c.soft ? '1px dashed #9AA3B2' : '1px solid #C9D0DB', bg:'#fff', fg: c.soft ? '#6B7385' : '#374153' })),
+        vehPending: m.t === 'vehicle' && !m.answered, vehDone: m.t === 'vehicle' && !!m.answered,
+        onYes: () => { this.setState(st => ({ vehicle:V, msgs: st.msgs.map(x => x.id === m.id ? { ...x, answered:true } : x).concat([mk('system', { text:'Coche guardado en tu garaje' })]) })); this.ai(700, axle(false), 'clarify'); },
+        onChange: () => { this.setState(st => ({ vehicle:null, msgs: st.msgs.map(x => x.id === m.id ? { ...x, answered:true } : x).concat([mk('user', { text:'Cambiar coche' })]) })); this.ai(600, mk('ai', { text:'De acuerdo. Escribe el VIN o la matrícula del coche correcto.', vinHelp:true, chips:[chip('Usar VIN de ejemplo','vin_demo')] }), 'vin'); },
+        showCarts: m.t === 'result' && !m.noStock, noStock: !!m.noStock, both: !!m.both,
+        onExpert: () => this.openExpert(),
+        onAnyway: () => { this.setState(st => ({ msgs: st.msgs.map(x => x.id === m.id ? mk('result', { both:true }) : x) })); this.scrollToResult(); },
+        errBg: m.kind === 'limit' ? '#FBF1DA' : '#F9E7E7', errFg: m.kind === 'limit' ? '#8F5E00' : '#A33A3A',
+        onBtn: () => {
+          if (m.act === 'signup') { this.afterAuthNone = true; return this.setState({ modal:'auth' }); }
+          this.setState(st => ({ msgs: st.msgs.filter(x => x.id !== m.id) }));
+          this.typing('Reintentando…', 1100, () => { this.push(askVin(false)); this.setState({ stage:'vin' }); });
+        },
+        hasAction: !!m.action, onAction: () => { this.setState({ group:'288', cart:2, layout:'tabs' }); this.scrollToResult(); this.toast('Mostrando la opción recomendada por Marta'); }
+      };
+    });
+    const hasVeh = !!s.vehicle;
+    const modal = s.modal;
+    const ch = [['chat','Seguir en este chat','Recomendado · el historial queda guardado'],['whatsapp','WhatsApp','Te escribimos al número que nos indiques'],['email','Email', s.user ? s.user.email : 'A tu dirección de email']];
+    const fbo = [['wrong','No es la pieza correcta'],['price','Demasiado caro'],['slow','Entrega demasiado lenta'],['other','Otro']];
+    return {
+      isDesktop: desk, isMobile: !desk,
+      hdrPad: desk ? '18px 40px' : '10px 16px',
+      startPad: desk ? '48px 40px' : '24px 18px 40px', startCols: desk ? 'minmax(0,1.3fr) minmax(0,1fr)' : 'minmax(0,1fr)', startGap: desk ? '56px' : '24px', h1Size: desk ? '44px' : '30px', blogImgH: desk ? '340px' : '200px',
+      chatOuterPad: desk ? '20px 40px 24px' : '0', shellR: desk ? '12px' : '0', msgMax: desk ? '78%' : '92%',
+      modalAlign: desk ? 'center' : 'flex-end', modalR: desk ? '14px' : '16px 16px 0 0',
+      isStart: s.view === 'start', isBlog: s.view === 'blog', isHistory: s.view === 'history', isChat: s.view === 'chat',
+      showBeta: P.showBeta ?? true, betaInChat: !desk && (P.showBeta ?? true),
+      goHome: set({ view:'start' }), goStart: set({ view:'start' }), goBlog: set({ view:'blog' }), goHistory: set({ view:'history' }),
+      query: s.query, onQuery: e => this.setState({ query: e.target.value }), onQueryKey: e => { if (e.key === 'Enter') this.begin(this.state.query); }, onStart: () => this.begin(s.query || Q),
+      examples: ['pastillas de freno Golf 7','filtro de aceite Seat León 2018','amortiguadores traseros Clio IV','escobillas Toyota Corolla'].map(l => ({ label:l, onClick: () => this.begin(l) })),
+      vehicle: s.vehicle || {}, hasVehicle: hasVeh, noVehicle: !hasVeh,
+      vehicleShort: 'VW Golf VII 1.6 TDI · 2015 · CLHA',
+      headerSub: s.expertOn ? 'IA + experto humano' : 'Responde al momento',
+      carTabs: [['vin','VIN'],['plate','Matrícula']].map(([k, l]) => ({ label:l, onClick:set({ carTab:k }), bg: s.carTab === k ? '#fff' : 'transparent', fw: s.carTab === k ? 600 : 500 })),
+      carInput: s.carInput, onCarInput: e => this.setState({ carInput: e.target.value }), carPh: s.carTab === 'vin' ? 'WVWZZZAUZFW805412' : '1234 ABC',
+      vinTip: s.vinTip, toggleVinTip: () => this.setState(st => ({ vinTip: !st.vinTip })), vinPlaces: VIN_PLACES,
+      saveCar: () => { this.setState({ vehicle:V }); this.toast('Coche añadido: Volkswagen Golf VII 1.6 TDI'); },
+      launcherTip: s.launcherTip, closeTip: set({ launcherTip:false }),
+      openLauncher: () => this.setState({ view:'chat', stage:'idle', msgs:[mk('ai', { text:'Hola. Soy el asistente de Pieza Exacta. Dime qué pieza buscas y para qué coche, con tus palabras.', chips:[chip('pastillas de freno Golf 7','example'),chip('batería Seat Ibiza 2019','example'),chip('No sé qué pieza es','part_other',1)] })] }),
+      noUser: !s.user, hasUser: !!s.user, openAuth: () => { this.afterAuthNone = true; this.setState({ modal:'auth' }); },
+      history: HISTORY.map((h, i) => ({ ...h, status:STATUS[h.st][0], fg:STATUS[h.st][1], bg:STATUS[h.st][2], onClick:set({ modal:'reopen', reopen:i }) })),
+      expertOn: s.expertOn,
+      changeCarHeader: () => { this.setState({ vehicle:null }); this.push(mk('ai', { text:'Vale, cambiamos de coche. Escribe el VIN o la matrícula.', vinHelp:true, chips:[chip('Usar VIN de ejemplo','vin_demo')] })); this.setState({ stage:'vin' }); },
+      addCarHeader: () => { this.push(mk('ai', { text:'Escribe el VIN o la matrícula de tu coche y lo guardo para esta conversación.', vinHelp:true, chips:[chip('Usar VIN de ejemplo','vin_demo'),chip('No tengo el VIN','no_vin',1)] })); this.setState({ stage:'vin' }); },
+      listRef: this.listRef, msgs, res,
+      typingDots: React.createElement('span', { style:{ display:'inline-flex', gap:3 } }, [0,1,2].map(i => React.createElement('span', { key:i, style:{ width:6, height:6, borderRadius:'50%', background:'#6B7385', animation:`peDot 1.2s ${i * .15}s infinite ease-in-out` } }))),
+      ratingTitle: s.rating ? 'Gracias por tu valoración' : '¿Te ha sido útil este resultado?',
+      ratingBtns: [1,2,3,4,5].map(n => ({ n, onClick:set({ rating:n }), bg: n <= s.rating ? '#253CAC' : '#fff', fg: n <= s.rating ? '#fff' : '#374153', border: n <= s.rating ? '#253CAC' : '#C9D0DB' })),
+      openAvtopro: () => this.toast('Se abriría avtopro.es con este carrito ya preparado'),
+      copyAll: () => this.copy('__all', allCodes), copyAllLabel: s.copied === '__all' ? 'Códigos copiados ✓' : 'Copiar códigos',
+      sendEmail: () => this.toast(s.user ? `Resultado enviado a ${s.user.email}` : 'Te hemos enviado el resultado por email'),
+      openExpert: () => this.openExpert(),
+      nextPart: () => { this.push(mk('user', { text:'Buscar otra pieza' })); this.ai(600, mk('ai', { text:'¿Qué otra pieza necesitas para tu Golf VII?', chips:[chip('Discos de freno','part'),chip('Filtro de aceite','part'),chip('Kit de distribución','part'),chip('Amortiguadores','part'),chip('Escobillas','part'),chip('Otra cosa','part_other',1)] })); },
+      restart: () => { this.clear(); this.setState(Object.assign(BASE(), { view:'start' })); },
+      input: s.input, onInput: e => this.setState({ input: e.target.value }), onInputKey: e => { if (e.key === 'Enter') this.send(); }, send: () => this.send(),
+      inputPh: s.stage === 'vin' ? 'Escribe el VIN (17 caracteres)' : s.stage === 'plate' ? 'Escribe la matrícula' : 'Escribe tu pregunta…',
+      hasToast: !!s.toast, toast: s.toast,
+      hasModal: !!modal, closeModal: set({ modal:null }), stop: e => e.stopPropagation(),
+      mAuth: modal === 'auth', mHandoff: modal === 'handoff', mFeedback: modal === 'feedback', mReopen: modal === 'reopen',
+      email: s.email, onEmail: e => this.setState({ email: e.target.value, emailErr:false }), emailBorder: s.emailErr ? '#A33A3A' : '#D3D9E3',
+      gdpr: s.gdpr, toggleGdpr: () => this.setState(st => ({ gdpr: !st.gdpr, gdprErr:false })), gdprErr: s.gdprErr, gdprBg: s.gdprErr ? '#F9E7E7' : 'transparent',
+      authGoogle: () => this.doAuth(true), authEmail: () => this.doAuth(false),
+      channels: ch.map(([k, l, sub]) => ({ label:l, sub, onClick:set({ channel:k }), border: s.channel === k ? '#253CAC' : '#DDE2EA', bg: s.channel === k ? '#E8ECF8' : '#fff', ring: s.channel === k ? '#253CAC' : '#C9D0DB', dot: s.channel === k ? '#253CAC' : 'transparent' })),
+      handoffSend: () => this.handoffSend(),
+      fbOptions: fbo.map(([k, l]) => ({ label:l, onClick:set({ fb:k }), border: s.fb === k ? '#253CAC' : '#DDE2EA', bg: s.fb === k ? '#E8ECF8' : '#fff', fw: s.fb === k ? 600 : 400 })),
+      fbOther: s.fb === 'other', fbText: s.fbText, onFbText: e => this.setState({ fbText: e.target.value }), fbBtnBg: s.fb ? '#253CAC' : '#9AA3B2',
+      fbSend: () => { if (!this.state.fb) return; this.setState({ modal:null }); this.push(askFb()); },
+      reopenDate: HISTORY[s.reopen].date,
+      reopenGo: () => { this.setState({ modal:null, view:'chat', vehicle:V, msgs:[mk('system', { text:`Solicitud del ${HISTORY[s.reopen].date} reabierta` }), mk('user', { text:Q }), intro(), mk('result', { both:true })] }); this.typing('Comprobando disponibilidad y precios…', 1400, () => this.push(mk('system', { text:'Precios actualizados a las 14:32 · 1 precio ha cambiado' }))); }
+    };
+  }
+  copy(key, text) {
+    try { navigator.clipboard && navigator.clipboard.writeText(text); } catch (e) {}
+    this.setState({ copied: key });
+    clearTimeout(this.ct); this.ct = setTimeout(() => this.setState({ copied: '' }), 1600);
+  }
+}
+</script>
+</body>
+</html>
